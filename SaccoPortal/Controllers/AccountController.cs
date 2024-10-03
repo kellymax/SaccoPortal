@@ -61,7 +61,7 @@ public class AccountController : Controller
     public IActionResult Login() => View();
 
     [HttpPost]
-    public async Task<IActionResult> Login(LoginModel model)
+    public async Task<IActionResult> Login(UserLoginModel model)
     {
         if (ModelState.IsValid)
         {

@@ -2,7 +2,7 @@
 
 namespace SaccoPortal.Models
 {
-    public class LoginModel
+    public class UserLoginModel
     {
         [Required(ErrorMessage = "MemberId is required.")]
         public required int MemberId { get; set; }
