@@ -1,8 +1,28 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Sacco Portal "] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Welcome to the SACCO Portal</h1>
+    <p>Manage your savings, loans, and contributions effectively.</p>
+
+    <div class="mt-4">
+        <a class="btn btn-primary" href="@Url.Action("Register", "Account")">Register</a>
+        <a class="btn btn-secondary" href="@Url.Action("Login", "Account")">Login</a>
+    </div>
+
+    <hr class="my-4" />
+
+    <h2>Latest Updates</h2>
+    <p>Stay updated with the latest news and announcements:</p>
+    <ul>
+        <li>New savings plans available!</li>
+        <li>Loan application deadlines approaching!</li>
+        <li>Check out our financial literacy workshops.</li>
+    </ul>
+
+    <hr class="my-4" />
+
+    <h2>About Us</h2>
+    <p>We are committed to helping our members achieve financial stability and growth through savings and loans.</p>
 </div>

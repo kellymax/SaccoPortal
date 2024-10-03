@@ -2,15 +2,23 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 using System;
+using Microsoft.AspNetCore.Identity;
+using SaccoPortal.Models;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
-
-// Register your DbContext with the connection string from appsettings.json
 builder.Services.AddDbContext<SaccoPortalContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SaccoPortalConnection")));
+
+builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<SaccoPortalContext>();
+
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<SaccoPortalContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
@@ -18,7 +26,6 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -27,6 +34,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication(); // Ensure Authentication is enabled
 app.UseAuthorization();
 
 app.MapControllerRoute(
