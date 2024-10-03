@@ -24,20 +24,20 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Register(Register model)
+    public async Task<IActionResult> Register(RegisterModel model)
     {
         if (ModelState.IsValid)
         {
-#pragma warning disable IDE0090 // Use 'new(...)'
+            // Create a new user with MemberId and Email
             User user = new User
             {
-                UserId = Guid.NewGuid().ToString(), // Generate a new GUID for the user ID
-                MemberId = model.MemberId, // Link to the existing member
-                Email = model.Email // Set the Email
+                UserId = Guid.NewGuid().ToString(),  // Generate a new GUID for the user ID
+                MemberId = model.MemberId,           // Link to the existing member using MemberId
+                Email = model.Email                  // Set the Email
             };
-#pragma warning restore IDE0090 // Use 'new(...)'
 
-            var result = await _userManager.CreateAsync(user, model.Password); // Use CreateAsync method
+            // Use CreateAsync to register the user and hash the password
+            var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
@@ -45,13 +45,14 @@ public class AccountController : Controller
                 return RedirectToAction("Login");
             }
 
+            // Add any errors encountered during user creation
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
         }
 
-        // In case of validation errors, re-fetch members for the view
+        // If registration fails, re-fetch members for selection in the view
         var members = _context.Members.ToList();
         ViewBag.Members = members;
         return View(model);
@@ -65,10 +66,12 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
-            var user = await _userManager.FindByNameAsync(model.Username); // Use UserManager to find the user
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password)) // Check password
+            // Use MemberId to find the user instead of Username
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.MemberId == model.MemberId);
+
+            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
-                // Sign in the user (implement authentication logic here)
+                // Sign in the user (you can implement your authentication logic here)
                 return RedirectToAction("Index", "Home");
             }
 
